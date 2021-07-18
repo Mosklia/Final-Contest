@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QString>
-#include <QTextStream>
+#include "qstream.h"
 
 class passager
 {
@@ -11,7 +11,7 @@ class passager
 
 public:
     // Constructor
-    passager(const QString &name, const QString &pid);
+    passager(const QString &name = QString("NULL"), const QString &pid = QString("NULL"));
 
     // Get and set functions
     void set_pid(const QString &pid);
@@ -27,7 +27,7 @@ private:
 };
 
 QTextStream& operator<<(QTextStream &ost, const passager &p);
-QTextStream& operator>>(QTextStream &&ist, passager &p);
+QTextStream& operator>>(QTextStream &ist, passager &p);
 
 // Compares whether @other is equal to @elem.
 template <typename __tp>

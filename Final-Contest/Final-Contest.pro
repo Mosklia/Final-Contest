@@ -12,11 +12,15 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     passager.cpp \
+    qstream.cpp \
+    table.cpp \
     trip.cpp
 
 HEADERS += \
     mainwindow.h \
     passager.h \
+    qstream.h \
+    table.h \
     trip.h
 
 FORMS +=

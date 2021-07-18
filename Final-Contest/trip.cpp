@@ -86,7 +86,7 @@ void trip::erase_order(const passager &owner)
         if (x.owner == owner)
         {
             x.avaliable = true;
-            x.owner = passager("", "");
+            x.owner = passager("NULL", "NULL");
         }
     }
 }
@@ -94,7 +94,7 @@ void trip::erase_order(const passager &owner)
 void trip::erase_order(int seat_id)
 {
     __seats.at(seat_id).avaliable = true;
-    __seats.at(seat_id).owner = passager("", "");
+    __seats.at(seat_id).owner = passager("NULL", "NULL");
 }
 
 seat_code trip::query_seat(int seat_id) const
@@ -124,4 +124,65 @@ int trip::query_avaliable() const
     }
 
     return res;
+}
+
+bool trip::operator==(const trip &other) const
+{
+    return __departure_date == other.__departure_date
+            && __departure_time == other.__departure_time;
+}
+
+QTextStream& operator<<(QTextStream &ost, const seat &s)
+{
+    return ost << s.avaliable << ' ' << s.owner;
+}
+
+QTextStream& operator>>(QTextStream &ist, seat &s)
+{
+    return ist >> s.avaliable >> s.owner;
+}
+
+QTextStream& operator<<(QTextStream &ost, const trip &t)
+{
+    ost << t.get_id() << ' ' << t.get_destination() << ' '
+        << t.get_capacity() << ' '
+        << t.get_departure_date().toString("yyyy-MM-dd") << ' '
+        << t.get_departure_time().toString("HH:mm:ss") << '\n';
+
+    for (const auto &x : t.get_all_seats())
+    {
+        ost << x << '\n';
+    }
+
+    return ost;
+}
+
+QTextStream& operator>>(QTextStream &ist, trip &t)
+{
+    QString id, destination, d_date, d_time;
+    int capacity;
+
+    ist >> id >> destination >> capacity >> d_date >> d_time;
+    t.set_id(id);
+    t.set_capacity(capacity);
+    t.set_destination(destination);
+    t.set_departure_date(QDate::fromString(d_date, "yyyy-MM-dd"));
+    t.set_departure_time(QTime::fromString(d_time, "HH:mm:ss"));
+
+    for (int i = 0; i < capacity; ++i)
+    {
+        seat temp;
+        ist >> temp;
+
+        if (temp.avaliable == true)
+        {
+            t.erase_order(i);
+        }
+        else
+        {
+            t.add_order(temp.owner, i);
+        }
+    }
+
+    return ist;
 }

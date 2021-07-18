@@ -10,6 +10,7 @@
 #include <QDate>
 #include <QTime>
 #include <QPointer>
+#include "qstream.h"
 #include "passager.h"
 
 struct seat
@@ -18,12 +19,12 @@ struct seat
     passager owner;
 
     seat(bool avaliable = true,
-         const passager &owner = passager("", ""));
+         const passager &owner = passager());
 
 };
 
-std::ostream& operator<<(std::ostream &ost, const seat &s);
-std::istream& operator>>(std::istream &ist, seat &s);
+QTextStream& operator<<(QTextStream &ost, const seat &s);
+QTextStream& operator>>(QTextStream &ist, seat &s);
 
 enum class seat_code
 {
@@ -37,11 +38,11 @@ class trip
     Q_OBJECT
 
 public:
-    trip(const QString &id,
-         const QDate &departure_date,
-         const QTime &departure_time,
-         const QString &destination,
-         int capacity);
+    trip(const QString &id = "NULL",
+         const QDate &departure_date = QDate(),
+         const QTime &departure_time = QTime(),
+         const QString &destination = "NULL",
+         int capacity = 1);
 
     // Gets and sets.
     QString get_id() const;
@@ -58,6 +59,8 @@ public:
 
     int get_capacity() const;
     void set_capacity(int capacity);
+
+    bool operator==(const trip &other) const;
 
     // Add a user to the trip.
     // When the place is unavaliable, the function throws an exception.
@@ -87,5 +90,8 @@ private:
     int __capacity;
     std::vector<seat> __seats;
 };
+
+QTextStream& operator<<(QTextStream &ost, const trip &t);
+QTextStream& operator>>(QTextStream &ist, trip &t);
 
 #endif // TRIP_H
