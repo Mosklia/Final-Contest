@@ -12,6 +12,8 @@
 #include <QTableView>
 
 #include "file_dialog.h"
+#include "table.h"
+#include "trip_dialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,12 +34,14 @@ private slots:
     void on_savefile_clicked();
     void on_saveas_clicked();
     void reload_model();
-//    void on_detail_clicked() = delete;
+    void on_detail_clicked();
+    void show_detail(const QModelIndex &index);
 
 signals:
     void file_open_failed(const QString &file);
     void readfile_opened(QFile &file);
     void writefile_opened(QFile &file);
+    void detail_clicked(trip *);
 
 private:
 //    Ui::MainWindow *ui;
@@ -52,6 +56,8 @@ private:
     QPushButton *detail_button;
     QStandardItemModel *main_model;
     QTableView *main_view;
+    trip_dialog *trip_dia;
+    blank_delegate *delegate_main;
 
     void initialize_attributes();
     void initialize_ui();

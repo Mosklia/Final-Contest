@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     , detail_button(new QPushButton("Detail..", central))
     , main_model(new QStandardItemModel(this))
     , main_view(new QTableView(this))
+    , trip_dia(new trip_dialog(this))
+    , delegate_main(new blank_delegate(this))
 //    , ui(new Ui::MainWindow)
 {
 //    ui->setupUi(this);
@@ -44,6 +46,7 @@ MainWindow::~MainWindow()
 void MainWindow::initialize_ui()
 {
     addToolBar(tool_bar);
+    resize(600, 400);
 
 //    main_layout->insertWidget(1, detail_button);
 //    main_layout->addWidget(tool_bar);
@@ -63,7 +66,6 @@ void MainWindow::initialize_attributes()
     tool_bar->addAction(save_file);
     tool_bar->addAction(save_as);
 
-    main_view->setModel(main_model);
     main_model->setColumnCount(5);
     main_model->setHorizontalHeaderLabels(QStringList({
         "No.",
@@ -72,6 +74,12 @@ void MainWindow::initialize_attributes()
         "Departure time",
         "Capacity"
                                                       }));
+
+    main_view->setSelectionMode(QAbstractItemView::SingleSelection);
+    main_view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    main_view->setModel(main_model);
+    main_view->setItemDelegate(delegate_main);
+//    main_view->set
 
     main_layout->addWidget(main_view, 0, 0, 1, 3);
     main_layout->addWidget(detail_button, 1, 1, Qt::AlignCenter);
@@ -98,6 +106,14 @@ void MainWindow::initialize_connections()
             this, &MainWindow::on_savefile_clicked);
     connect(save_as, &QAction::triggered,
             this, &MainWindow::on_saveas_clicked);
+
+    connect(delegate_main, &blank_delegate::created_blank_delegate,
+            this, &MainWindow::show_detail);
+    connect(detail_button, &QPushButton::clicked,
+            this, &MainWindow::on_detail_clicked);
+
+    connect(this, &MainWindow::iconSizeChanged,
+            main_view, &QTableView::resizeColumnsToContents);
 }
 
 void MainWindow::on_open_file(const QString &file)
@@ -168,4 +184,17 @@ void MainWindow::reload_model()
             new QStandardItem(QString::number(x.get_capacity()))
                                                     }));
     }
+}
+
+void MainWindow::show_detail(const QModelIndex &index)
+{
+    if (index.model() == main_model)
+    {
+        trip_dia->execute(main_table.get_trip(index.row()));
+    }
+}
+
+void MainWindow::on_detail_clicked()
+{
+    trip_dia->execute(main_table.get_trip(main_view->currentIndex().row()));
 }
