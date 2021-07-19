@@ -7,10 +7,15 @@ MainWindow::MainWindow(QWidget *parent)
     , data_file(nullptr)
     , open_file_diag(new open_file_dialog(this))
     , save_file_diag(new save_file_dialog(this))
+    , central(new QWidget(this))
+    , main_layout(new QGridLayout(central))
+    , tool_bar(new QToolBar(this))
     , load_file(new QAction("Load", this))
     , save_file(new QAction("Save", this))
     , save_as(new QAction("Save as", this))
-    , tool_bar(new QToolBar(this))
+    , detail_button(new QPushButton("Detail..", central))
+    , main_model(new QStandardItemModel(this))
+    , main_view(new QTableView(this))
 //    , ui(new Ui::MainWindow)
 {
 //    ui->setupUi(this);
@@ -22,9 +27,15 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
 //    delete ui;
+    delete main_view;
+    delete main_model;
+    delete detail_button;
+    delete tool_bar;
     delete save_as;
     delete save_file;
     delete load_file;
+    delete main_layout;
+    delete central;
     delete save_file_diag;
     delete open_file_diag;
     delete data_file;
@@ -33,6 +44,12 @@ MainWindow::~MainWindow()
 void MainWindow::initialize_ui()
 {
     addToolBar(tool_bar);
+
+//    main_layout->insertWidget(1, detail_button);
+//    main_layout->addWidget(tool_bar);
+    setCentralWidget(central);
+
+//    setLayout(main_layout);
     statusBar();
 }
 
@@ -45,6 +62,20 @@ void MainWindow::initialize_attributes()
     tool_bar->addAction(load_file);
     tool_bar->addAction(save_file);
     tool_bar->addAction(save_as);
+
+    main_view->setModel(main_model);
+    main_model->setColumnCount(5);
+    main_model->setHorizontalHeaderLabels(QStringList({
+        "No.",
+        "Destination",
+        "Departure date",
+        "Departure time",
+        "Capacity"
+                                                      }));
+
+    main_layout->addWidget(main_view, 0, 0, 1, 3);
+    main_layout->addWidget(detail_button, 1, 1, Qt::AlignCenter);
+    central->setLayout(main_layout);
 }
 
 void MainWindow::initialize_connections()
@@ -56,6 +87,8 @@ void MainWindow::initialize_connections()
 
     connect(this, &MainWindow::readfile_opened,
             &main_table, &table::read_from);
+    connect(this, &MainWindow::readfile_opened,
+            this, &MainWindow::reload_model);
     connect(this, &MainWindow::writefile_opened,
             &main_table, &table::save_to);
 
@@ -121,4 +154,18 @@ void MainWindow::on_savefile_clicked()
 void MainWindow::on_saveas_clicked()
 {
     save_file_diag->exec();
+}
+
+void MainWindow::reload_model()
+{
+    for (const auto &x : main_table.get_all_trips())
+    {
+        main_model->appendRow(QList<QStandardItem*>({
+            new QStandardItem(x.get_id()),
+            new QStandardItem(x.get_destination().replace('^', ' ')),
+            new QStandardItem(x.get_departure_date().toString("yyyy-MM-dd")),
+            new QStandardItem(x.get_departure_time().toString("HH:mm:ss")),
+            new QStandardItem(QString::number(x.get_capacity()))
+                                                    }));
+    }
 }

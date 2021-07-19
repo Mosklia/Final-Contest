@@ -6,6 +6,10 @@
 #include <QAction>
 #include <QToolBar>
 #include <QMenuBar>
+#include <QPushButton>
+#include <QGridLayout>
+#include <QStandardItemModel>
+#include <QTableView>
 
 #include "file_dialog.h"
 
@@ -21,12 +25,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-public slots:
+private slots:
     void on_save_file(const QString &file);
     void on_open_file(const QString &file);
     void on_loadfile_clicked();
     void on_savefile_clicked();
     void on_saveas_clicked();
+    void reload_model();
+//    void on_detail_clicked() = delete;
 
 signals:
     void file_open_failed(const QString &file);
@@ -38,9 +44,14 @@ private:
     QFile *data_file;
     open_file_dialog *open_file_diag;
     save_file_dialog *save_file_diag;
-    QAction *load_file, *save_file, *save_as;
+    QWidget *central;
+    QGridLayout *main_layout;
     QToolBar *tool_bar;
-    QMenuBar *menu_bar;
+    QAction *load_file, *save_file, *save_as;
+//    QMenuBar *menu_bar;
+    QPushButton *detail_button;
+    QStandardItemModel *main_model;
+    QTableView *main_view;
 
     void initialize_attributes();
     void initialize_ui();
