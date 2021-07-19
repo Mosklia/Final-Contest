@@ -2,6 +2,11 @@
 #include <algorithm>
 #include "trip.h"
 
+seat::seat(bool avaliable, const passager& owner)
+    : avaliable(avaliable), owner(owner)
+{
+}
+
 trip::trip(const QString &id,
            const QDate &departure_date,
            const QTime &departure_time,
@@ -185,4 +190,9 @@ QTextStream& operator>>(QTextStream &ist, trip &t)
     }
 
     return ist;
+}
+
+const std::vector<seat>& trip::get_all_seats() const
+{
+    return __seats;
 }

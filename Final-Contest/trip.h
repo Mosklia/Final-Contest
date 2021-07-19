@@ -33,9 +33,10 @@ enum class seat_code
     invalid = 2
 };
 
+//class trip : public QObject
 class trip
 {
-    Q_OBJECT
+//    Q_OBJECT
 
 public:
     trip(const QString &id = "NULL",
@@ -61,11 +62,7 @@ public:
     void set_capacity(int capacity);
 
     bool operator==(const trip &other) const;
-
-    // Add a user to the trip.
-    // When the place is unavaliable, the function throws an exception.
-    // Note that the id of seats starts with 0.
-    void add_order(const passager &owner, int seat_id);
+//    trip& operator=(const trip &other) = default;
 
     // Query the statue of a seat.
     // Always run this before operating the seats.
@@ -81,6 +78,12 @@ public:
 
     // Query for how many seats are avaliable.
     int query_avaliable() const;
+
+//public slots:
+    // Add a user to the trip.
+    // When the place is unavaliable, the function throws an exception.
+    // Note that the id of seats starts with 0.
+    void add_order(const passager &owner, int seat_id);
 
 private:
     QString __id; // __id: number of the trip

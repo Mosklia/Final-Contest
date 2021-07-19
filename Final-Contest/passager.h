@@ -5,9 +5,10 @@
 #include <QString>
 #include "qstream.h"
 
+//class passager : public QObject
 class passager
 {
-    Q_OBJECT
+//    Q_OBJECT
 
 public:
     // Constructor

@@ -5,7 +5,7 @@
 #include <QFile>
 #include "trip.h"
 
-class table
+class table : public QObject
 {
     Q_OBJECT
 
@@ -16,6 +16,7 @@ public slots:
     void read_from(QFile &source);
     void save_to(QFile &source);
     const std::vector<trip>& get_all_trips() const;
+    trip& get_trip(int index);
 
 private:
     std::vector<trip> __trips;

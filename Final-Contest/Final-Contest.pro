@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    file_dialog.cpp \
     main.cpp \
     mainwindow.cpp \
     passager.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
     trip.cpp
 
 HEADERS += \
+    file_dialog.h \
     mainwindow.h \
     passager.h \
     qstream.h \
