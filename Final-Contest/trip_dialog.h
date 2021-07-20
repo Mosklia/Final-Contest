@@ -48,6 +48,7 @@ private slots:
     void selection_changed();
     void on_button_click();
     void reload_model();
+    void process_refund();
 
 private:
     trip *data;

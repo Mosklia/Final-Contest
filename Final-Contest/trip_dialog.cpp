@@ -10,6 +10,7 @@ trip_dialog::trip_dialog(QWidget *parent)
     , view(new QTableView(this))
     , delegate(new blank_delegate(this))
 {
+    setFixedSize(400, 300);
     model->setColumnCount(3);
     model->setHorizontalHeaderLabels(QStringList({"Avaliable", "Name", "ID No."}));
     view->setModel(model);
@@ -31,6 +32,8 @@ trip_dialog::trip_dialog(QWidget *parent)
             refund_diag, &refund_dialog::exec);
     connect(view, &QTableView::clicked,
             this, &trip_dialog::selection_changed);
+    connect(this, &trip_dialog::refund_requested,
+            this, &trip_dialog::process_refund);
 }
 
 void trip_dialog::execute(trip &source)
@@ -86,4 +89,21 @@ void trip_dialog::on_button_click()
 
 trip_dialog::~trip_dialog()
 {
+    delete delegate;
+    delete view;
+    delete model;
+    delete refund_diag;
+    delete order_diag;
+    delete change_button;
+    delete diag_layout;
+}
+
+void trip_dialog::process_refund()
+{
+    int seat_id = view->currentIndex().row();
+    if (refund_diag->result() == QDialog::Accepted)
+    {
+        data->erase_order(seat_id);
+        reload_model();
+    }
 }
