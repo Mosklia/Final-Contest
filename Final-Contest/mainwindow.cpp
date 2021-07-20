@@ -1,3 +1,4 @@
+#include <QDebug>
 #include "mainwindow.h"
 #include "table.h"
 //#include "ui_mainwindow.h"
@@ -183,6 +184,13 @@ void MainWindow::reload_model()
             new QStandardItem(x.get_departure_time().toString("HH:mm:ss")),
             new QStandardItem(QString::number(x.get_capacity()))
                                                     }));
+
+        if (x.get_departure_date() < QDate::currentDate() ||
+            x.get_departure_date() >= QDate::currentDate().addDays(3))
+        {
+            main_view->setRowHidden(main_model->rowCount() - 1, true);
+//            qDebug() << "Hidden: " << main_view->currentIndex().row() << '\n';
+        }
     }
 }
 

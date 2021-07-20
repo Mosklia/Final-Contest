@@ -19,7 +19,7 @@ false NULL NULL
 D3034 Nanjing^South 5 2021-07-21 06:33:40
 false user^A 1062X
 false user^B 10595
-true NULL NULL
+false user^E 19260817
 true NULL NULL
 false user^C 20462
 
@@ -39,3 +39,4 @@ true NULL NULL
 false passenger^C 25565
 true NULL NULL
 false Spaky^14145 114514
+
