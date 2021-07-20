@@ -72,6 +72,8 @@ public:
     // NEVER TRY TO MODIFY THIS VECTOR DIRECTLY!
     const std::vector<seat>& get_all_seats() const;
 
+    seat& get_seat(int index);
+
     // rnm, refund my money!
     void erase_order(const passager &owner);
     void erase_order(int seat_id);

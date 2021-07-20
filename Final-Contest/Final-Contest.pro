@@ -15,6 +15,7 @@ SOURCES += \
     passager.cpp \
     qstream.cpp \
     table.cpp \
+    ticket_dialog.cpp \
     trip.cpp \
     trip_dialog.cpp
 
@@ -24,6 +25,7 @@ HEADERS += \
     passager.h \
     qstream.h \
     table.h \
+    ticket_dialog.h \
     trip.h \
     trip_dialog.h
 

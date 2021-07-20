@@ -196,3 +196,8 @@ const std::vector<seat>& trip::get_all_seats() const
 {
     return __seats;
 }
+
+seat& trip::get_seat(int index)
+{
+    return __seats[index];
+}
