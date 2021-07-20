@@ -1,3 +1,4 @@
+#include <QDebug>
 #include "trip_dialog.h"
 
 trip_dialog::trip_dialog(QWidget *parent)
@@ -34,6 +35,8 @@ trip_dialog::trip_dialog(QWidget *parent)
             this, &trip_dialog::selection_changed);
     connect(this, &trip_dialog::refund_requested,
             this, &trip_dialog::process_refund);
+    connect(this, &trip_dialog::order_requested,
+            this, &trip_dialog::process_order);
 }
 
 void trip_dialog::execute(trip &source)
@@ -104,6 +107,22 @@ void trip_dialog::process_refund()
     if (refund_diag->result() == QDialog::Accepted)
     {
         data->erase_order(seat_id);
+        reload_model();
+    }
+}
+
+void trip_dialog::process_order()
+{
+    int seat_id = view->currentIndex().row();
+    if (order_diag->result() == QDialog::Accepted)
+    {
+        data->add_order(passager(
+                            order_diag->get_name().replace(' ', '^'),
+                            order_diag->get_idnum()
+                            ),
+                        seat_id
+                        );
+        qDebug() << order_diag->get_name() << ": " << order_diag->get_idnum() << ' ' << seat_id;
         reload_model();
     }
 }
