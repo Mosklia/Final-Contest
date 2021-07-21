@@ -43,6 +43,7 @@ void trip_dialog::execute(trip &source)
 {
     data = &source;
     reload_model();
+    setWindowTitle(source.get_id());
 
     exec();
 }
@@ -65,7 +66,7 @@ void trip_dialog::reload_model()
     model->clear();
 
     model->setColumnCount(3);
-    model->setHorizontalHeaderLabels(QStringList({"Avaliable", "Name", "ID No."}));
+    model->setHorizontalHeaderLabels(QStringList({"Available", "Name", "ID No."}));
 
     for (const auto &x : data->get_all_seats())
     {
@@ -122,7 +123,7 @@ void trip_dialog::process_order()
                             ),
                         seat_id
                         );
-        qDebug() << order_diag->get_name() << ": " << order_diag->get_idnum() << ' ' << seat_id;
+//        qDebug() << order_diag->get_name() << ": " << order_diag->get_idnum() << ' ' << seat_id;
         reload_model();
     }
 }

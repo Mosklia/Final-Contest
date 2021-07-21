@@ -19,7 +19,7 @@ false NULL NULL
 D3034 Nanjing^South 5 2021-07-21 06:33:40
 false user^A 1062X
 false user^B 10595
-false user^E 19260817
+false user^3 2602X
 true NULL NULL
 false user^C 20462
 

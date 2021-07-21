@@ -47,7 +47,7 @@ MainWindow::~MainWindow()
 void MainWindow::initialize_ui()
 {
     addToolBar(tool_bar);
-    resize(600, 400);
+    resize(618, 420);
 
 //    main_layout->insertWidget(1, detail_button);
 //    main_layout->addWidget(tool_bar);
@@ -67,15 +67,6 @@ void MainWindow::initialize_attributes()
     tool_bar->addAction(save_file);
     tool_bar->addAction(save_as);
 
-    main_model->setColumnCount(5);
-    main_model->setHorizontalHeaderLabels(QStringList({
-        "No.",
-        "Destination",
-        "Departure date",
-        "Departure time",
-        "Capacity"
-                                                      }));
-
     main_view->setSelectionMode(QAbstractItemView::SingleSelection);
     main_view->setSelectionBehavior(QAbstractItemView::SelectRows);
     main_view->setModel(main_model);
@@ -85,6 +76,15 @@ void MainWindow::initialize_attributes()
     main_layout->addWidget(main_view, 0, 0, 1, 3);
     main_layout->addWidget(detail_button, 1, 1, Qt::AlignCenter);
     central->setLayout(main_layout);
+    main_model->setColumnCount(6);
+    main_model->setHorizontalHeaderLabels(QStringList({
+        "No.",
+        "Destination",
+        "Departure date",
+        "Departure time",
+        "Capacity",
+        "Seats available"
+                                                      }));
 }
 
 void MainWindow::initialize_connections()
@@ -175,6 +175,18 @@ void MainWindow::on_saveas_clicked()
 
 void MainWindow::reload_model()
 {
+    main_model->clear();
+
+    main_model->setColumnCount(6);
+    main_model->setHorizontalHeaderLabels(QStringList({
+        "No.",
+        "Destination",
+        "Departure date",
+        "Departure time",
+        "Capacity",
+        "Seats available"
+                                                      }));
+
     for (const auto &x : main_table.get_all_trips())
     {
         main_model->appendRow(QList<QStandardItem*>({
@@ -182,7 +194,8 @@ void MainWindow::reload_model()
             new QStandardItem(x.get_destination().replace('^', ' ')),
             new QStandardItem(x.get_departure_date().toString("yyyy-MM-dd")),
             new QStandardItem(x.get_departure_time().toString("HH:mm:ss")),
-            new QStandardItem(QString::number(x.get_capacity()))
+            new QStandardItem(QString::number(x.get_capacity())),
+            new QStandardItem(QString::number(x.query_avaliable()))
                                                     }));
 
         if (x.get_departure_date() < QDate::currentDate() ||
@@ -199,6 +212,7 @@ void MainWindow::show_detail(const QModelIndex &index)
     if (index.model() == main_model)
     {
         trip_dia->execute(main_table.get_trip(index.row()));
+        reload_model();
     }
 }
 
